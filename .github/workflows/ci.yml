@@ -21,6 +21,9 @@ jobs:
   fmt:
     name: fmt
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./nysh
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -33,6 +36,9 @@ jobs:
   clippy:
     name: clippy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./nysh
     permissions:
       contents: read
       checks: write
@@ -45,27 +51,40 @@ jobs:
           components: clippy
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: nysh
       - name: Run clippy action
         uses: clechasseur/rs-clippy-check@v5
+        with:
+          working-directory: ./nysh
   doc:
     # run docs generation on nightly rather than stable. This enables features like
     # https://doc.rust-lang.org/beta/unstable-book/language-features/doc-cfg.html which allows an
     # API be documented as only available in some specific platforms.
     name: doc
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./nysh
     steps:
       - uses: actions/checkout@v7
       - name: Install Rust nightly
         uses: dtolnay/rust-toolchain@nightly
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: nysh
       - name: Run cargo doc
+        working-directory: /nysh
         run: cargo doc --no-deps --all-features
         env:
           RUSTDOCFLAGS: --cfg docsrs
   test:
     runs-on: ${{ matrix.os }}
     name: test ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./nysh
     strategy:
       fail-fast: false
       matrix:
@@ -86,5 +105,7 @@ jobs:
         run: cargo generate-lockfile
       - name: Cache Cargo dependencies
         uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: nysh
       - name: cargo test --locked
         run: cargo test --locked --all-features --all-targets
