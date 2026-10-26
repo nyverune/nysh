@@ -75,7 +75,7 @@ jobs:
         with:
           workspaces: nysh
       - name: Run cargo doc
-        working-directory: /nysh
+        working-directory: ./nysh
         run: cargo doc --no-deps --all-features
         env:
           RUSTDOCFLAGS: --cfg docsrs
