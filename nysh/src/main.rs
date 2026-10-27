@@ -1,4 +1,9 @@
+mod checks;
+
 use std::io;
+use std::process::Command;
+use std::str::FromStr;
+use strum_macros::EnumString;
 
 use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
@@ -10,6 +15,8 @@ use ratatui::{
     text::{Line, Text},
     widgets::{Block, Paragraph, Widget},
 };
+
+use checks::{is_program_installed};
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -78,6 +85,50 @@ impl Widget for &App {
     }
 }
 
-fn main() -> io::Result<()> {
-    ratatui::run(|terminal| App::default().run(terminal))
+#[derive(Debug, PartialEq, EnumString, strum::Display)]
+enum Algorithm {
+    #[strum(serialize = "ecdsa")]
+    Ecdsa,
+
+    #[strum(serialize = "ecdsa-sk")]
+    EcdsaSk,
+
+    #[strum(serialize = "ed25519")]
+    Ed25519,
+
+    #[strum(serialize = "ed25519-sk")]
+    Ed25519Sk,
+
+    #[strum(serialize = "mldsa44-ed25519")]
+    Mldsa44Ed25519,
+
+    #[strum(serialize = "rsa")]
+    Rsa,
+}
+
+struct GenerateKeyProps {
+    alias: String,
+    email: String,
+    path: String,
+    algorithm: Algorithm,
+    passphrasse: Option<String>,
+    bits: u32,
+}
+
+fn generate_key(props: GenerateKeyProps) {
+   Command::new("ssh-keygen")
+       .args([
+           "-t",
+           &props.algorithm.to_string(),
+           "-C",
+           &props.email])
+       .status()
+       .expect("ssh-keygen failed");
+}
+
+// fn main() -> io::Result<()> {
+fn main() {
+    // ratatui::run(|terminal| App::default().run(terminal))
+    let is_installed = is_program_installed("ssh-agent");
+    println!("{}", is_installed);
 }
