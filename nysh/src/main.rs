@@ -16,7 +16,7 @@ use ratatui::{
     widgets::{Block, Paragraph, Widget},
 };
 
-use checks::{is_program_installed};
+use checks::is_program_installed;
 
 #[derive(Debug, Default)]
 pub struct App {
@@ -116,14 +116,10 @@ struct GenerateKeyProps {
 }
 
 fn generate_key(props: GenerateKeyProps) {
-   Command::new("ssh-keygen")
-       .args([
-           "-t",
-           &props.algorithm.to_string(),
-           "-C",
-           &props.email])
-       .status()
-       .expect("ssh-keygen failed");
+    Command::new("ssh-keygen")
+        .args(["-t", &props.algorithm.to_string(), "-C", &props.email])
+        .status()
+        .expect("ssh-keygen failed");
 }
 
 // fn main() -> io::Result<()> {

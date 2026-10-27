@@ -14,4 +14,3 @@ pub fn is_program_installed(program: &str) -> bool {
         Err(_) => false,                // El comando en sí falló al ejecutarse
     }
 }
-
