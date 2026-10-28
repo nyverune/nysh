@@ -127,6 +127,21 @@ fn generate_key(props: GenerateKeyProps) -> std::io::Result<()> {
     }
 
     let key_path = ssh_dir.join(&props.alias);
+    let key_pub_path = ssh_dir.join(format!("{}.pub", &props.alias));
+
+    if key_path.exists() {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::AlreadyExists,
+            format!("File {} already exists.", key_path.display()),
+        ));
+    }
+
+    if key_pub_path.exists() {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::AlreadyExists,
+            format!("File {} already exists.", key_pub_path.display()),
+        ));
+    }
 
     Command::new("ssh-keygen")
         .args([
@@ -161,5 +176,8 @@ fn main() {
         bits: 4096,
     };
 
-    generate_key(props);
+    match generate_key(props) {
+        Ok(_) => println!("Ok"),
+        (_) => println!("No ok"),
+    };
 }
