@@ -1,6 +1,7 @@
 mod checks;
 
 use std::io;
+use std::path::PathBuf;
 use std::process::Command;
 use std::str::FromStr;
 use strum_macros::EnumString;
@@ -111,15 +112,38 @@ struct GenerateKeyProps {
     email: String,
     path: String,
     algorithm: Algorithm,
-    passphrasse: Option<String>,
+    passphrasse: String,
     bits: u32,
 }
 
-fn generate_key(props: GenerateKeyProps) {
+fn generate_key(props: GenerateKeyProps) -> std::io::Result<()> {
+    let ssh_dir = home::home_dir().unwrap().join(".ssh");
+
+    std::fs::create_dir_all(&ssh_dir)?;
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::set_permissions(&ssh_dir, std::fs::Permissions::from_mode(0o700))?;
+    }
+
+    let key_path = ssh_dir.join(&props.alias);
+
     Command::new("ssh-keygen")
-        .args(["-t", &props.algorithm.to_string(), "-C", &props.email])
+        .args([
+            "-t",
+            &props.algorithm.to_string(),
+            "-C",
+            &props.email,
+            "-N",
+            &props.passphrasse,
+            "-f",
+            key_path.to_str().unwrap(),
+            "-q",
+        ])
         .status()
         .expect("ssh-keygen failed");
+
+    Ok(())
 }
 
 // fn main() -> io::Result<()> {
@@ -127,4 +151,15 @@ fn main() {
     // ratatui::run(|terminal| App::default().run(terminal))
     let is_installed = is_program_installed("ssh-agent");
     println!("{}", is_installed);
+
+    let props = GenerateKeyProps {
+        alias: "test".to_string(),
+        email: "test@gmail.com".to_string(),
+        path: "~/.ssh".to_string(),
+        algorithm: Algorithm::Ed25519,
+        passphrasse: "passphrasse".to_string(),
+        bits: 4096,
+    };
+
+    generate_key(props);
 }
