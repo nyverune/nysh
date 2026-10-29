@@ -1,4 +1,8 @@
-use crate::ui::ui;
+mod generate_key;
+mod utils;
+mod ui;
+
+use ui::ui;
 
 use std::io;
 

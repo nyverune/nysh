@@ -1,5 +1,4 @@
 mod app;
-mod ui;
 
 use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::execute;
@@ -22,7 +21,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 
     // Create app and run it
     let mut app = app::App::new();
-    let res = app::run_app(&mut terminal, &mut app)?;
+    app::run_app(&mut terminal, &mut app)?;
 
     // Restore terminal
     disable_raw_mode()?;
