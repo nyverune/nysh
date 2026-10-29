@@ -1,6 +1,6 @@
 mod generate_key;
-mod utils;
 mod ui;
+mod utils;
 
 use ui::ui;
 
