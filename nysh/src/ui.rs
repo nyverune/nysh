@@ -1,5 +1,5 @@
-use ratatui::{Frame};
+use ratatui::Frame;
 
-use crate::app::{App};
+use crate::app::App;
 
 pub fn ui(frame: &mut Frame, app: &App) {}

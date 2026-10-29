@@ -1,11 +1,8 @@
-use crate::ui::{ui};
+use crate::ui::ui;
 
 use std::io;
 
-use ratatui::{
-    Terminal,
-    backend::{Backend},
-};
+use ratatui::{Terminal, backend::Backend};
 
 pub enum CurrentScreen {
     Main,
@@ -24,10 +21,7 @@ impl App {
     }
 }
 
-pub fn run_app<B: Backend>(
-    terminal: &mut Terminal<B>,
-    app: &mut App,
-) -> io::Result<bool>
+pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<bool>
 where
     io::Error: From<B::Error>,
 {

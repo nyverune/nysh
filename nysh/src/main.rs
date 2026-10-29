@@ -1,34 +1,21 @@
 mod app;
 mod ui;
 
+use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::execute;
-use crossterm::event::{
-    DisableMouseCapture,
-    EnableMouseCapture,
-};
 use crossterm::terminal::{
-    enable_raw_mode,
-    EnterAlternateScreen,
-    disable_raw_mode,
-    LeaveAlternateScreen
+    EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
 };
 
-use std::{io, error};
+use std::{error, io};
 
-use ratatui::{
-    Terminal,
-    backend::CrosstermBackend,
-};
+use ratatui::{Terminal, backend::CrosstermBackend};
 
 fn main() -> Result<(), Box<dyn error::Error>> {
     // Setup terminal
     enable_raw_mode()?;
     let mut stdout = io::stdout();
-    execute!(
-        stdout,
-        EnterAlternateScreen,
-        EnableMouseCapture,
-    )?;
+    execute!(stdout, EnterAlternateScreen, EnableMouseCapture,)?;
 
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
@@ -48,4 +35,3 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 
     Ok(())
 }
-
