@@ -1,6 +1,9 @@
+pub mod config;
 mod generate_key;
 mod ui;
 mod utils;
+
+use config::AppConfig;
 
 use ui::ui;
 
@@ -30,12 +33,12 @@ impl App {
     }
 }
 
-pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App) -> io::Result<bool>
+pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App, config: AppConfig) -> io::Result<bool>
 where
     io::Error: From<B::Error>,
 {
     loop {
-        terminal.draw(|frame| ui(frame, app))?;
+        terminal.draw(|frame| ui(frame, app, config.clone()))?;
 
         if let Event::Key(key) = event::read()? {
             // Skip events that are not KeyEventKind::Press

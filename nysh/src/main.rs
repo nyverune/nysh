@@ -1,5 +1,7 @@
 mod app;
 
+use app::config::{AppConfig, load_config};
+
 use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::execute;
 use crossterm::terminal::{
@@ -11,6 +13,8 @@ use std::{error, io};
 use ratatui::{Terminal, backend::CrosstermBackend};
 
 fn main() -> Result<(), Box<dyn error::Error>> {
+    let config: AppConfig = load_config();
+
     // Setup terminal
     enable_raw_mode()?;
     let mut stdout = io::stdout();
@@ -21,7 +25,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 
     // Create app and run it
     let mut app = app::App::new();
-    app::run_app(&mut terminal, &mut app)?;
+    app::run_app(&mut terminal, &mut app, config)?;
 
     // Restore terminal
     disable_raw_mode()?;
