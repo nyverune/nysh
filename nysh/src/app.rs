@@ -1,5 +1,5 @@
+mod commands;
 pub mod config;
-mod generate_key;
 mod ui;
 mod utils;
 

@@ -1,28 +1,7 @@
 use std::process::Command;
-use strum_macros::EnumString;
 
-use super::utils::create_dir;
-
-#[derive(Debug, PartialEq, EnumString, strum::Display)]
-pub enum Algorithm {
-    #[strum(serialize = "ecdsa")]
-    Ecdsa,
-
-    #[strum(serialize = "ecdsa-sk")]
-    EcdsaSk,
-
-    #[strum(serialize = "ed25519")]
-    Ed25519,
-
-    #[strum(serialize = "ed25519-sk")]
-    Ed25519Sk,
-
-    #[strum(serialize = "mldsa44-ed25519")]
-    Mldsa44Ed25519,
-
-    #[strum(serialize = "rsa")]
-    Rsa,
-}
+use crate::app::commands::types::Algorithm;
+use crate::app::utils::create_dir;
 
 pub struct GenerateKeyProps {
     alias: String,
@@ -32,7 +11,7 @@ pub struct GenerateKeyProps {
     bits: u32,
 }
 
-pub fn generate_key(props: GenerateKeyProps) -> std::io::Result<()> {
+pub fn create_new_ssh_identity(props: GenerateKeyProps) -> std::io::Result<()> {
     let ssh_dir = home::home_dir().unwrap().join(".ssh");
 
     create_dir(&ssh_dir)?;
