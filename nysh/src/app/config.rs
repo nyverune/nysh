@@ -102,7 +102,7 @@ pub fn load_config() -> AppConfig {
 
         if let Ok(content) = fs::read_to_string(&config_path) {
             match toml::from_str::<AppConfig>(&content) {
-                Ok(load_config) => {config.theme = load_config.theme},
+                Ok(load_config) => config.theme = load_config.theme,
                 Err(e) => eprintln!(
                     "Config parse error {}: {}. Using defaults.",
                     config_path.display(),

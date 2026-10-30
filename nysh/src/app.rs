@@ -33,7 +33,11 @@ impl App {
     }
 }
 
-pub fn run_app<B: Backend>(terminal: &mut Terminal<B>, app: &mut App, config: AppConfig) -> io::Result<bool>
+pub fn run_app<B: Backend>(
+    terminal: &mut Terminal<B>,
+    app: &mut App,
+    config: AppConfig,
+) -> io::Result<bool>
 where
     io::Error: From<B::Error>,
 {

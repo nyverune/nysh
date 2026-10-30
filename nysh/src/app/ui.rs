@@ -26,18 +26,14 @@ fn draw_layout(frame: &mut Frame, area: Rect, config: AppConfig) -> LayoutAreas 
         .borders(Borders::ALL)
         .border_style(Style::default().fg(theme.selection))
         .title_top(
-            Line::from(format!(" {} ", config.app_name)).left_aligned().style(
-                Style::default()
-                    .fg(theme.fg)
-                    .add_modifier(Modifier::BOLD),
-            ),
+            Line::from(format!(" {} ", config.app_name))
+                .left_aligned()
+                .style(Style::default().fg(theme.fg).add_modifier(Modifier::BOLD)),
         )
         .title_top(
-            Line::from(format!(" {} ", config.version)).right_aligned().style(
-                Style::default()
-                    .fg(theme.fg)
-                    .add_modifier(Modifier::BOLD),
-            ),
+            Line::from(format!(" {} ", config.version))
+                .right_aligned()
+                .style(Style::default().fg(theme.fg).add_modifier(Modifier::BOLD)),
         );
 
     frame.render_widget(&top, chunks[0]);
