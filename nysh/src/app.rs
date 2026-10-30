@@ -6,10 +6,15 @@ use ui::ui;
 
 use std::io;
 
-use ratatui::{Terminal, backend::Backend};
+use ratatui::{
+    Terminal,
+    backend::Backend,
+    crossterm::event::{self, Event, KeyCode, KeyEventKind},
+};
 
 pub enum CurrentScreen {
     Main,
+    Exiting,
     NewSshIdentity,
 }
 
@@ -31,5 +36,37 @@ where
 {
     loop {
         terminal.draw(|frame| ui(frame, app))?;
+
+        if let Event::Key(key) = event::read()? {
+            // Skip events that are not KeyEventKind::Press
+            if key.kind == event::KeyEventKind::Release {
+                continue;
+            }
+
+            match app.current_screen {
+                CurrentScreen::Main => match key.code {
+                    KeyCode::Char('n') => {
+                        app.current_screen = CurrentScreen::NewSshIdentity;
+                    }
+                    KeyCode::Char('q') => {
+                        app.current_screen = CurrentScreen::Exiting;
+                    }
+                    _ => {}
+                },
+                CurrentScreen::Exiting => match key.code {
+                    KeyCode::Char('y') => {
+                        return Ok(true);
+                    }
+                    _ => {
+                        app.current_screen = CurrentScreen::Main;
+                    }
+                },
+                CurrentScreen::NewSshIdentity => match key.code {
+                    _ => {
+                        app.current_screen = CurrentScreen::Main;
+                    }
+                },
+            }
+        }
     }
 }
