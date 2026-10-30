@@ -9,7 +9,7 @@ use std::io;
 use ratatui::{
     Terminal,
     backend::Backend,
-    crossterm::event::{self, Event, KeyCode, KeyEventKind},
+    crossterm::event::{self, Event, KeyCode},
 };
 
 pub enum CurrentScreen {
