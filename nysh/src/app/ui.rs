@@ -1,7 +1,7 @@
-mod layout;
+pub mod layout;
 pub mod widgets;
 
-use crate::app::{App, AppConfig, CurrentScreen, ssh::screens};
+use crate::app::{App, AppConfig, CurrentModal, CurrentScreen, modals, ssh::screens};
 use layout::draw_layout;
 
 use ratatui::{
@@ -39,10 +39,7 @@ pub fn draw(frame: &mut Frame, app: &App, config: &AppConfig) {
 
     match app.current_screen {
         CurrentScreen::Main => {
-            draw_layout(frame, inner_area, config, "Nysh".to_string(), true);
-        }
-        CurrentScreen::Exiting => {
-            screens::exit::draw(frame, inner_area, config);
+            screens::main::draw(frame, inner_area, config);
         }
         CurrentScreen::NewSshIdentity => {
             draw_layout(
@@ -53,5 +50,12 @@ pub fn draw(frame: &mut Frame, app: &App, config: &AppConfig) {
                 false,
             );
         }
+    }
+
+    match app.current_modal {
+        CurrentModal::ConfirmExit => {
+            modals::confirm_exit::draw(frame, inner_area, config);
+        }
+        _ => {}
     }
 }

@@ -1,10 +1,11 @@
+pub mod modals;
 mod ssh;
 pub mod types;
 mod ui;
 mod utils;
 
 use crate::config::AppConfig;
-use types::CurrentScreen;
+use types::{CurrentModal, CurrentScreen};
 
 use std::io;
 
@@ -16,6 +17,7 @@ use ratatui::{
 
 pub struct App {
     pub current_screen: CurrentScreen,
+    pub current_modal: CurrentModal,
     pub exit: bool,
 }
 
@@ -23,6 +25,7 @@ impl App {
     pub fn new() -> App {
         App {
             current_screen: CurrentScreen::Main,
+            current_modal: CurrentModal::NoModal,
             exit: false,
         }
     }

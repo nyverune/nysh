@@ -1,5 +1,11 @@
+#[derive(PartialEq)]
 pub enum CurrentScreen {
     Main,
-    Exiting,
     NewSshIdentity,
+}
+
+#[derive(PartialEq)]
+pub enum CurrentModal {
+    NoModal,
+    ConfirmExit,
 }
