@@ -83,7 +83,7 @@ fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
 
 fn draw_exiting_ui(frame: &mut Frame, area: Rect, config: &AppConfig) {
     let theme = &config.theme;
-    let popup_area = centered_rect(45, 20, area);
+    let popup_area = centered_rect(45, 15, area);
 
     let block = Block::default()
         .title(Line::from(" Are you sure you want to exit? ").centered())
