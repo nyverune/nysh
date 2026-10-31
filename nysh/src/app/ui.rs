@@ -8,6 +8,7 @@ use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout},
     style::Style,
+    text::Line,
     widgets::Block,
 };
 
@@ -48,6 +49,7 @@ pub fn draw(frame: &mut Frame, app: &App, config: &AppConfig) {
                 config,
                 "New SSH Identity".to_string(),
                 false,
+                Line::from(vec![]),
             );
         }
     }

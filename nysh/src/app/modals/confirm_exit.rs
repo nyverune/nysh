@@ -20,6 +20,10 @@ pub fn draw(frame: &mut Frame, area: Rect, config: &AppConfig) {
     frame.render_widget(&block, popup_area);
 
     let inner_area = block.inner(popup_area);
+    frame.render_widget(
+        Block::default().style(Style::default().bg(config.theme.bg)),
+        inner_area,
+    );
 
     let text = vec![
         Line::from(""),

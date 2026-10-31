@@ -4,13 +4,12 @@ use ratatui::crossterm::event::{KeyCode, KeyEvent};
 
 pub fn handler(app: &mut App, key: KeyEvent) -> bool {
     if app.current_screen == CurrentScreen::Main && app.current_modal == CurrentModal::ConfirmExit {
-        match key.code {
+        return match key.code {
             KeyCode::Char('y') => {
                 app.exit = true;
                 true
             }
             KeyCode::Char('n') | KeyCode::Esc => {
-                app.current_screen = CurrentScreen::Main;
                 app.current_modal = CurrentModal::NoModal;
                 true
             }

@@ -2,16 +2,11 @@ use crate::app::AppConfig;
 
 use ratatui::{
     Frame,
-    layout::{Constraint, Direction, Layout, Rect},
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Modifier, Style},
     text::Line,
-    widgets::{Block, Borders},
+    widgets::{Block, Borders, Paragraph},
 };
-
-pub struct LayoutAreas {
-    top_content: Rect,
-    bottom_content: Rect,
-}
 
 pub fn draw_layout(
     frame: &mut Frame,
@@ -19,7 +14,8 @@ pub fn draw_layout(
     config: &AppConfig,
     title: String,
     show_version: bool,
-) -> LayoutAreas {
+    keybinds: Line<'static>,
+) -> Rect {
     let theme = &config.theme;
 
     let chunks = Layout::default()
@@ -52,11 +48,12 @@ pub fn draw_layout(
         .borders(Borders::ALL)
         .border_style(Style::default().fg(theme.selection));
 
-    frame.render_widget(&bottom, chunks[1]);
+    let paragraph = Paragraph::new(keybinds)
+        .alignment(Alignment::Center)
+        .block(bottom);
+
+    frame.render_widget(&paragraph, chunks[1]);
 
     // === Return ===
-    LayoutAreas {
-        top_content: top.inner(chunks[0]),
-        bottom_content: bottom.inner(chunks[1]),
-    }
+    top.inner(chunks[0])
 }
