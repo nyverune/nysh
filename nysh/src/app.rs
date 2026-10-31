@@ -1,29 +1,29 @@
-mod commands;
-pub mod config;
+mod ssh;
 pub mod types;
 mod ui;
 mod utils;
 
-use config::AppConfig;
+use crate::config::AppConfig;
 use types::CurrentScreen;
-use ui::ui;
 
 use std::io;
 
 use ratatui::{
     Terminal,
     backend::Backend,
-    crossterm::event::{self, Event, KeyCode},
+    crossterm::event::{self, Event, KeyCode, KeyModifiers},
 };
 
 pub struct App {
     pub current_screen: CurrentScreen,
+    pub exit: bool,
 }
 
 impl App {
     pub fn new() -> App {
         App {
             current_screen: CurrentScreen::Main,
+            exit: false,
         }
     }
 }
@@ -36,8 +36,8 @@ pub fn run_app<B: Backend>(
 where
     io::Error: From<B::Error>,
 {
-    loop {
-        terminal.draw(|frame| ui(frame, app, config))?;
+    while !app.exit {
+        terminal.draw(|frame| ui::draw(frame, app, config))?;
 
         if let Event::Key(key) = event::read()? {
             // Skip events that are not KeyEventKind::Press
@@ -45,30 +45,15 @@ where
                 continue;
             }
 
-            match app.current_screen {
-                CurrentScreen::Main => match key.code {
-                    KeyCode::Char('n') => {
-                        app.current_screen = CurrentScreen::NewSshIdentity;
+            if !ssh::handler::handler(app, key) {
+                if let KeyCode::Char('c') = key.code {
+                    if key.modifiers.contains(KeyModifiers::CONTROL) {
+                        app.exit = true;
                     }
-                    KeyCode::Char('q') => {
-                        app.current_screen = CurrentScreen::Exiting;
-                    }
-                    _ => {}
-                },
-                CurrentScreen::Exiting => match key.code {
-                    KeyCode::Char('y') => {
-                        return Ok(true);
-                    }
-                    _ => {
-                        app.current_screen = CurrentScreen::Main;
-                    }
-                },
-                CurrentScreen::NewSshIdentity => match key.code {
-                    _ => {
-                        app.current_screen = CurrentScreen::Main;
-                    }
-                },
+                }
             }
         }
     }
+
+    Ok(true)
 }

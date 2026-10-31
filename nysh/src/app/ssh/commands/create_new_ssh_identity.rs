@@ -1,7 +1,6 @@
 use std::process::Command;
 
-use crate::app::commands::types::Algorithm;
-use crate::app::utils::create_dir;
+use crate::app::{ssh::commands::types::Algorithm, utils::create_dir};
 
 pub struct GenerateKeyProps {
     alias: String,

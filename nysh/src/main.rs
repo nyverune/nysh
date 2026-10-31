@@ -1,6 +1,7 @@
 mod app;
+mod config;
 
-use app::config::{AppConfig, load_config};
+use config::{AppConfig, load_config};
 
 use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::execute;
