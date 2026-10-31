@@ -25,7 +25,7 @@ fn main() -> Result<(), Box<dyn error::Error>> {
 
     // Create app and run it
     let mut app = app::App::new();
-    app::run_app(&mut terminal, &mut app, config)?;
+    app::run_app(&mut terminal, &mut app, &config)?;
 
     // Restore terminal
     disable_raw_mode()?;

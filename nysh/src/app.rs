@@ -1,10 +1,11 @@
 mod commands;
 pub mod config;
+pub mod types;
 mod ui;
 mod utils;
 
 use config::AppConfig;
-
+use types::CurrentScreen;
 use ui::ui;
 
 use std::io;
@@ -14,12 +15,6 @@ use ratatui::{
     backend::Backend,
     crossterm::event::{self, Event, KeyCode},
 };
-
-pub enum CurrentScreen {
-    Main,
-    Exiting,
-    NewSshIdentity,
-}
 
 pub struct App {
     pub current_screen: CurrentScreen,
@@ -36,13 +31,13 @@ impl App {
 pub fn run_app<B: Backend>(
     terminal: &mut Terminal<B>,
     app: &mut App,
-    config: AppConfig,
+    config: &AppConfig,
 ) -> io::Result<bool>
 where
     io::Error: From<B::Error>,
 {
     loop {
-        terminal.draw(|frame| ui(frame, app, config.clone()))?;
+        terminal.draw(|frame| ui(frame, app, config))?;
 
         if let Event::Key(key) = event::read()? {
             // Skip events that are not KeyEventKind::Press
