@@ -8,22 +8,15 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph},
 };
 
-pub fn draw_layout(
+pub fn draw_top_layout(
     frame: &mut Frame,
     area: Rect,
     config: &AppConfig,
     title: String,
     show_version: bool,
-    keybinds: Line<'static>,
 ) -> Rect {
     let theme = &config.theme;
 
-    let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Min(1), Constraint::Length(3)])
-        .split(area);
-
-    // === Top ===
     let mut top = Block::default()
         .borders(Borders::ALL)
         .border_style(Style::default().fg(theme.selection))
@@ -41,7 +34,29 @@ pub fn draw_layout(
         );
     }
 
-    frame.render_widget(&top, chunks[0]);
+    frame.render_widget(&top, area);
+
+    top.inner(area)
+}
+
+pub fn draw_layout(
+    frame: &mut Frame,
+    area: Rect,
+    config: &AppConfig,
+    title: String,
+    show_version: bool,
+    keybinds: Line<'static>,
+) -> Rect {
+    let theme = &config.theme;
+
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Min(1), Constraint::Length(3)])
+        .split(area);
+
+    // === Top ===
+
+    let top = draw_top_layout(frame, chunks[0], config, title, show_version);
 
     // === Bottom ===
     let bottom = Block::default()
@@ -52,8 +67,8 @@ pub fn draw_layout(
         .alignment(Alignment::Center)
         .block(bottom);
 
-    frame.render_widget(&paragraph, chunks[1]);
+    frame.render_widget(paragraph, chunks[1]);
 
     // === Return ===
-    top.inner(chunks[0])
+    top
 }
