@@ -2,13 +2,11 @@ pub mod layout;
 pub mod widgets;
 
 use crate::app::{App, AppConfig, CurrentModal, CurrentScreen, modals, ssh::screens};
-use layout::draw_layout;
 
 use ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout},
     style::Style,
-    text::Line,
     widgets::Block,
 };
 
@@ -43,14 +41,7 @@ pub fn draw(frame: &mut Frame, app: &App, config: &AppConfig) {
             screens::main::draw(frame, inner_area, config);
         }
         CurrentScreen::NewSshIdentity => {
-            draw_layout(
-                frame,
-                inner_area,
-                config,
-                "New SSH Identity".to_string(),
-                false,
-                Line::from(vec![]),
-            );
+            screens::new_ssh_identity::draw(frame, inner_area, config);
         }
     }
 

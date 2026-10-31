@@ -30,7 +30,11 @@ pub fn handler(app: &mut App, key: KeyEvent) -> bool {
             _ => false,
         },
         CurrentScreen::NewSshIdentity => match key.code {
-            KeyCode::Esc | KeyCode::Char('c') => {
+            KeyCode::Char('c') => {
+                // TODO: Handle create
+                true
+            }
+            KeyCode::Esc => {
                 app.current_screen = CurrentScreen::Main;
                 true
             }
