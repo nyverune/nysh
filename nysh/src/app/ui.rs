@@ -38,7 +38,7 @@ pub fn draw(frame: &mut Frame, app: &App, config: &AppConfig) {
 
     match app.current_screen {
         CurrentScreen::Main => {
-            screens::main::draw(frame, inner_area, config);
+            screens::main::draw(app, frame, inner_area, config);
         }
         CurrentScreen::NewSshIdentity => {
             screens::new_ssh_identity::draw(frame, inner_area, config);

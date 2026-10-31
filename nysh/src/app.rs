@@ -5,6 +5,7 @@ mod ui;
 mod utils;
 
 use crate::config::AppConfig;
+use ssh::commands::{get_ssh_identities::get_ssh_identities, types::SshIdentity};
 use types::{CurrentModal, CurrentScreen};
 
 use std::io;
@@ -18,14 +19,18 @@ use ratatui::{
 pub struct App {
     pub current_screen: CurrentScreen,
     pub current_modal: CurrentModal,
+    pub identities: Vec<SshIdentity>,
+    pub selected_index: usize,
     pub exit: bool,
 }
 
 impl App {
-    pub fn new() -> App {
+    pub fn new(config: &AppConfig) -> App {
         App {
             current_screen: CurrentScreen::Main,
             current_modal: CurrentModal::NoModal,
+            identities: get_ssh_identities(config),
+            selected_index: 0,
             exit: false,
         }
     }

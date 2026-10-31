@@ -1,6 +1,6 @@
 use strum_macros::EnumString;
 
-#[derive(Debug, PartialEq, EnumString, strum::Display)]
+#[derive(Debug, PartialEq, Clone, EnumString, strum::Display)]
 pub enum Algorithm {
     #[strum(serialize = "ecdsa")]
     Ecdsa,
@@ -19,4 +19,21 @@ pub enum Algorithm {
 
     #[strum(serialize = "rsa")]
     Rsa,
+}
+
+#[derive(Debug, Clone)]
+pub struct SshIdentity {
+    pub alias: String,
+    pub key_type: Algorithm,
+    pub key_path: String,
+    pub public_key: String,
+    pub fingerprint: String,
+    pub auth_status: AuthStatus,
+}
+
+#[derive(Debug, Clone)]
+pub enum AuthStatus {
+    NotTested,
+    Authenticated(String), // Save github username
+    Failed(String),
 }

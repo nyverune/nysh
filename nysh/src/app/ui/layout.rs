@@ -5,7 +5,7 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Modifier, Style},
     text::Line,
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders, Padding, Paragraph},
 };
 
 pub fn draw_top_layout(
@@ -14,10 +14,12 @@ pub fn draw_top_layout(
     config: &AppConfig,
     title: String,
     show_version: bool,
+    padding: Padding,
 ) -> Rect {
     let theme = &config.theme;
 
     let mut top = Block::default()
+        .padding(padding)
         .borders(Borders::ALL)
         .border_style(Style::default().fg(theme.selection))
         .title_top(
@@ -30,7 +32,11 @@ pub fn draw_top_layout(
         top = top.title_top(
             Line::from(format!(" {} ", config.version))
                 .right_aligned()
-                .style(Style::default().fg(theme.fg).add_modifier(Modifier::BOLD)),
+                .style(
+                    Style::default()
+                        .fg(theme.muted)
+                        .add_modifier(Modifier::BOLD),
+                ),
         );
     }
 
@@ -56,7 +62,14 @@ pub fn draw_layout(
 
     // === Top ===
 
-    let top = draw_top_layout(frame, chunks[0], config, title, show_version);
+    let top = draw_top_layout(
+        frame,
+        chunks[0],
+        config,
+        title,
+        show_version,
+        Padding::new(2, 2, 1, 1),
+    );
 
     // === Bottom ===
     let bottom = Block::default()

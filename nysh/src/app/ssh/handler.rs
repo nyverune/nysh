@@ -23,6 +23,26 @@ pub fn handler(app: &mut App, key: KeyEvent) -> bool {
                 app.current_screen = CurrentScreen::NewSshIdentity;
                 true
             }
+            KeyCode::Down => {
+                if !app.identities.is_empty() {
+                    if app.selected_index >= app.identities.len().saturating_sub(1) {
+                        app.selected_index = 0;
+                    } else {
+                        app.selected_index += 1;
+                    }
+                }
+                true
+            }
+            KeyCode::Up => {
+                if !app.identities.is_empty() {
+                    if app.selected_index == 0 {
+                        app.selected_index = app.identities.len().saturating_sub(1);
+                    } else {
+                        app.selected_index -= 1;
+                    }
+                }
+                true
+            }
             KeyCode::Char('q') => {
                 app.current_modal = CurrentModal::ConfirmExit;
                 true
