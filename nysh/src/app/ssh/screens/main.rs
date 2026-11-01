@@ -45,7 +45,7 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
             Constraint::Length(1),
             Constraint::Min(1),
             Constraint::Length(1),
-            Constraint::Length(7),
+            Constraint::Length(9),
         ])
         .split(inner_top);
 
@@ -117,28 +117,51 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
         Padding::new(1, 1, 1, 0),
     );
 
-    let detail_chunks = Layout::default()
-        .direction(Direction::Horizontal)
-        .constraints([Constraint::Length(15), Constraint::Min(1)])
-        .split(details);
-
-    let labels = vec![
-        Line::from("Type:"),
-        Line::from("Public key:"),
-        Line::from("Host alias:"),
-        Line::from("Fingerprint:"),
+    let labels_and_values = vec![
+        Line::from(vec![
+            Span::styled("Type:        ", Style::default().fg(theme.muted)),
+            Span::styled(
+                selected_identity.key_type.to_string(),
+                Style::default().fg(theme.fg),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Public key:  ", Style::default().fg(theme.muted)),
+            Span::styled(
+                selected_identity.public_key.clone(),
+                Style::default().fg(theme.info),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Host alias:  ", Style::default().fg(theme.muted)),
+            Span::styled(
+                format!("{} -> github.com", selected_identity.alias),
+                Style::default().fg(theme.fg),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Fingerprint: ", Style::default().fg(theme.muted)),
+            Span::styled(
+                selected_identity.fingerprint.clone(),
+                Style::default().fg(theme.muted),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Path:        ", Style::default().fg(theme.muted)),
+            Span::styled(
+                selected_identity.key_path.clone(),
+                Style::default().fg(theme.info),
+            ),
+        ]),
+        Line::from(vec![
+            Span::styled("Status:      ", Style::default().fg(theme.muted)),
+            Span::styled(
+                format!("{}", selected_identity.auth_status),
+                Style::default().fg(theme.success),
+            ),
+        ]),
     ];
 
-    let label_paragraph = Paragraph::new(labels);
-    frame.render_widget(label_paragraph, detail_chunks[0]);
-
-    let keys = vec![
-        Line::from(selected_identity.key_type.to_string()),
-        Line::from(selected_identity.public_key.clone()),
-        Line::from(format!("{} -> {}", selected_identity.alias, "github.com")),
-        Line::from(selected_identity.fingerprint.clone()),
-    ];
-
-    let keys_paragraph = Paragraph::new(keys);
-    frame.render_widget(keys_paragraph, detail_chunks[1]);
+    let details_paragraph = Paragraph::new(labels_and_values);
+    frame.render_widget(details_paragraph, details);
 }

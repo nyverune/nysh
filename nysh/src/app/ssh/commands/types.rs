@@ -1,3 +1,4 @@
+use std::fmt;
 use strum_macros::EnumString;
 
 #[derive(Debug, PartialEq, Clone, EnumString, strum::Display)]
@@ -36,4 +37,14 @@ pub enum AuthStatus {
     NotTested,
     Authenticated(String), // Save github username
     Failed(String),
+}
+
+impl fmt::Display for AuthStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            AuthStatus::NotTested => write!(f, "not tested"),
+            AuthStatus::Authenticated(user) => write!(f, "authenticated ({})", user),
+            AuthStatus::Failed(reason) => write!(f, "auth failed ({})", reason),
+        }
+    }
 }

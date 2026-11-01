@@ -5,12 +5,18 @@ use ratatui::{
     layout::{Alignment, Rect},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph},
+    widgets::{Block, Borders, Clear, Paragraph},
 };
 
 pub fn draw(frame: &mut Frame, area: Rect, config: &AppConfig) {
     let theme = &config.theme;
     let popup_area = centered_rect(45, 15, area);
+
+    frame.render_widget(Clear, popup_area);
+    frame.render_widget(
+        Block::default().style(Style::default().bg(config.theme.bg)),
+        popup_area,
+    );
 
     let block = Block::default()
         .title(Line::from(" Are you sure you want to exit? ").centered())
@@ -20,10 +26,6 @@ pub fn draw(frame: &mut Frame, area: Rect, config: &AppConfig) {
     frame.render_widget(&block, popup_area);
 
     let inner_area = block.inner(popup_area);
-    frame.render_widget(
-        Block::default().style(Style::default().bg(config.theme.bg)),
-        inner_area,
-    );
 
     let text = vec![
         Line::from(""),
