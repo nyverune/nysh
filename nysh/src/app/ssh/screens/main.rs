@@ -16,7 +16,7 @@ use ratatui::{
 
 pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
     let theme = &config.theme;
-    let selected_identity = &app.identities[app.selected_index];
+    let selected_identity = app.identities.get(app.selected_index);
 
     let keybinds = Line::from(vec![
         Span::styled(
@@ -67,6 +67,17 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
     // === Separator ===
     frame.render_widget(separator(theme.selection), chunks[1]);
 
+    // === Empty state ===
+    if selected_identity.is_none() {
+        let empty_state = Paragraph::new(format!("No SSH identities in {}", config.ssh_dir))
+            .alignment(Alignment::Center)
+            .style(Style::default().fg(theme.muted));
+        frame.render_widget(empty_state, chunks[2]);
+        return;
+    }
+
+    let selected_identity = selected_identity.unwrap();
+
     // === List Identities ===
     let list_chunks = Layout::default()
         .direction(Direction::Horizontal)
@@ -99,10 +110,6 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
     state.select(Some(app.selected_index));
 
     frame.render_stateful_widget(list, list_chunks[0], &mut state);
-
-    if app.identities.len() == 0 {
-        return;
-    }
 
     // === Separator ===
     frame.render_widget(separator(theme.selection), chunks[3]);

@@ -79,6 +79,8 @@ pub struct AppConfig {
 
     pub theme: ThemePalette,
 
+    pub ssh_dir: String,
+
     #[serde(skip)]
     pub version: String,
 }
@@ -88,6 +90,7 @@ impl Default for AppConfig {
         Self {
             app_name: "Nysh".to_string(),
             theme: ThemePalette::default(),
+            ssh_dir: "~/.ssh".to_string(),
             version: "0.0.0".to_string(),
         }
     }
