@@ -27,6 +27,7 @@ pub struct SshIdentity {
     pub alias: String,
     pub key_type: Algorithm,
     pub key_path: String,
+    pub host_name: String,
     pub public_key: String,
     pub fingerprint: String,
     pub auth_status: AuthStatus,

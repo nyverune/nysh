@@ -1,5 +1,5 @@
 pub mod modals;
-mod ssh;
+pub mod ssh;
 pub mod types;
 mod ui;
 mod utils;

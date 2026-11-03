@@ -69,7 +69,7 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
 
     // === Empty state ===
     if selected_identity.is_none() {
-        let empty_state = Paragraph::new(format!("No SSH identities in {}", config.ssh_dir))
+        let empty_state = Paragraph::new(format!("No SSH identities in {}", config.ssh_config))
             .alignment(Alignment::Center)
             .style(Style::default().fg(theme.muted));
         frame.render_widget(empty_state, chunks[2]);
@@ -142,7 +142,10 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
         Line::from(vec![
             Span::styled("Host alias:  ", Style::default().fg(theme.muted)),
             Span::styled(
-                format!("{} -> github.com", selected_identity.alias),
+                format!(
+                    "{} -> {}",
+                    selected_identity.alias, selected_identity.host_name
+                ),
                 Style::default().fg(theme.fg),
             ),
         ]),
