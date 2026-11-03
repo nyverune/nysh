@@ -20,6 +20,43 @@ pub enum Algorithm {
 
     #[strum(serialize = "rsa")]
     Rsa,
+
+    #[strum(serialize = "unknown")]
+    Unknown,
+}
+
+impl Algorithm {
+    pub fn parse(s: &str) -> Algorithm {
+        match s {
+            // --- ed25519 ---
+            "ssh-ed25519" => Algorithm::Ed25519,
+            "sk-ssh-ed25519@openssh.com" => Algorithm::Ed25519Sk,
+
+            // --- RSA ---
+            // Only "ssh-rsa" carries the rsa-sha2-256/512 capabilities; the
+            // rsa-sha2-* strings can also appear as key types in `.pub` files
+            // on newer OpenSSH, so accept them too.
+            "ssh-rsa" | "rsa-sha2-256" | "rsa-sha2-512" => Algorithm::Rsa,
+
+            // --- ECDSA (NIST curves) ---
+            "ecdsa-sha2-nistp256" | "ecdsa-sha2-nistp384" | "ecdsa-sha2-nistp521" => {
+                Algorithm::Ecdsa
+            }
+
+            // --- ECDSA security key (FIDO/U2F) ---
+            "sk-ecdsa-sha2-nistp256@openssh.com" => Algorithm::EcdsaSk,
+
+            // --- Post-quantum hybrid ---
+            // Matches the hybrid algorithm you already have a variant for.
+            // (Exact string may vary by OpenSSH version; adjust as needed.)
+            "mldsa44-ed25519" | "mldsa44-ed25519@openssh.com" => Algorithm::Mldsa44Ed25519,
+
+            // --- Everything else: DSA, cert types, unknown ---
+            // "ssh-dss", "*-cert-v01@openssh.com", "" (empty first token),
+            // and anything unrecognized.
+            _ => Algorithm::Unknown,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
