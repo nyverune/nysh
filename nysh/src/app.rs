@@ -5,6 +5,7 @@ mod ui;
 mod utils;
 
 use crate::config::AppConfig;
+use arboard::Clipboard;
 use ssh::commands::{get_ssh_identities::get_ssh_identities, types::SshIdentity};
 use types::{CurrentModal, CurrentScreen};
 
@@ -21,6 +22,7 @@ pub struct App {
     pub current_modal: CurrentModal,
     pub identities: Vec<SshIdentity>,
     pub selected_index: usize,
+    pub clipboard: Clipboard,
     pub exit: bool,
 }
 
@@ -31,6 +33,7 @@ impl App {
             current_modal: CurrentModal::NoModal,
             identities: get_ssh_identities(config),
             selected_index: 0,
+            clipboard: Clipboard::new().unwrap(),
             exit: false,
         }
     }

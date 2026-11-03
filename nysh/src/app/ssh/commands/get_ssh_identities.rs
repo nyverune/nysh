@@ -1,8 +1,27 @@
 use super::types::{Algorithm, AuthStatus, SshIdentity};
 use crate::config::AppConfig;
+use std::env;
 use std::fs;
 use std::path::Path;
-use std::process::Command;
+
+fn expand_tilde(path: &str) -> String {
+    if path.starts_with("~/") {
+        if let Ok(home) = env::var("HOME") {
+            return format!("{}/{}", home, &path[2..]);
+        }
+    }
+    path.to_string()
+}
+
+fn get_public_key(path: String) -> String {
+    let expanded = expand_tilde(&path);
+    let pub_path = format!("{}.pub", expanded);
+
+    if let Ok(content) = fs::read_to_string(Path::new(&pub_path)) {
+        return content.trim().to_string();
+    }
+    String::new()
+}
 
 pub fn parse_identities(content: String) -> Vec<SshIdentity> {
     let mut entries = Vec::new();
@@ -22,9 +41,9 @@ pub fn parse_identities(content: String) -> Vec<SshIdentity> {
                 entries.push(SshIdentity {
                     alias: host,
                     key_type: Algorithm::Ed25519,
-                    key_path: identity_file,
+                    key_path: identity_file.clone(),
                     host_name,
-                    public_key: "".to_string(),
+                    public_key: get_public_key(identity_file.clone()),
                     fingerprint: "".to_string(),
                     auth_status: AuthStatus::NotTested,
                 });
@@ -36,7 +55,7 @@ pub fn parse_identities(content: String) -> Vec<SshIdentity> {
         } else if line.to_lowercase().starts_with("hostname ") {
             host_name = line[8..].to_string();
         } else if line.to_lowercase().starts_with("identityfile ") {
-            identity_file = line[13..].to_string();
+            identity_file = line[13..].trim_matches('"').to_string();
         }
     }
 
@@ -44,9 +63,9 @@ pub fn parse_identities(content: String) -> Vec<SshIdentity> {
         entries.push(SshIdentity {
             alias: host,
             key_type: Algorithm::Ed25519,
-            key_path: identity_file,
+            key_path: identity_file.clone(),
             host_name,
-            public_key: "".to_string(),
+            public_key: get_public_key(identity_file.clone()),
             fingerprint: "".to_string(),
             auth_status: AuthStatus::NotTested,
         });

@@ -25,6 +25,11 @@ pub fn draw(app: &App, frame: &mut Frame, area: Rect, config: &AppConfig) {
         ),
         Span::styled("New    ", Style::default().fg(theme.muted)),
         Span::styled(
+            "[c] ",
+            Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
+        ),
+        Span::styled("Copy public key    ", Style::default().fg(theme.muted)),
+        Span::styled(
             "[↑/↓] ",
             Style::default().fg(theme.fg).add_modifier(Modifier::BOLD),
         ),

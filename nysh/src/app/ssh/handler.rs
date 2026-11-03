@@ -43,6 +43,19 @@ pub fn handler(app: &mut App, key: KeyEvent) -> bool {
                 }
                 true
             }
+            KeyCode::Char('c') => {
+                if !app.identities.is_empty() {
+                    let text = app
+                        .identities
+                        .get(app.selected_index)
+                        .unwrap()
+                        .public_key
+                        .clone();
+
+                    let _ = app.clipboard.set_text(text);
+                }
+                true
+            }
             KeyCode::Char('q') => {
                 app.current_modal = CurrentModal::ConfirmExit;
                 true
